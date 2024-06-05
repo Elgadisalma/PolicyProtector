@@ -23,10 +23,11 @@ class AuthController extends Controller
         $user->access_token = $token->accessToken;
         return response()->json([
             'message' => 'Login successful',
-            'redirect_url' => 'http://localhost:3000/dashboard'
-        ], 200
-    )->header('Location', 'http://localhost:3000/dashboard');
+            'access_token' => $token->accessToken,
+
+        ], 200);
     }
+    
     
     public function logout(Request $request)
     {

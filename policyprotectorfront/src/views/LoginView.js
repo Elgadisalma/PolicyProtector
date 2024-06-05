@@ -1,10 +1,12 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { Navigate } from 'react-router-dom'; // Import Navigate instead of Redirect
 
 export default function LoginView() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [redirect, setRedirect] = useState(false); // Add state for redirect
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -14,15 +16,18 @@ export default function LoginView() {
         password,
       });
       console.log("Login successful:", response.data);
-      // Réinitialiser les champs du formulaire
-      setEmail("");
-      setPassword("");
-      // Gérer la suite de l'authentification, comme rediriger l'utilisateur
+      setRedirect(true); // Set redirect state to true
     } catch (error) {
       console.error("Error logging in:", error);
       setErrorMessage("Incorrect email or password");
     }
   };
+
+  // Render redirect if redirect state is true
+  if (redirect) {
+    return <Navigate to='/dashboard' replace />;
+  }
+
   return (
     <div className="min-h-screen bg-no-repeat bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1486520299386-6d106b22014b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80')" }}>
       <div className="flex justify-end">
