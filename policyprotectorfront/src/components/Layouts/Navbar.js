@@ -1,8 +1,32 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
+import axios from "axios";
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [redirect, setRedirect] = useState(false); 
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/logout", null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("Logged out successfully:", response.data);
+      setRedirect(true);
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+// Render redirect if redirect state is true
+if (redirect) {
+  return <Navigate to='/' replace />;
+}
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -10,7 +34,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="w-full items-center bg-white py-2 px-6 hidden sm:flex" >
+      <header className="w-full items-center bg-white py-2 px-6 hidden sm:flex">
         <div className="w-1/2"></div>
         <div className="relative w-1/2 flex justify-end">
           <button
@@ -33,12 +57,14 @@ export default function Navbar() {
               >
                 Support
               </Link>
-              <Link
-                to="#"
+              <a
+                
                 className="block px-4 py-2 account-link hover:text-blue-700"
               >
-                Sign Out
-              </Link>
+                <form onSubmit={handleLogout}>
+                  <button type="submit"> Sign Out </button>
+                </form>
+              </a>
             </div>
           )}
         </div>

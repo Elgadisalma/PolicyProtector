@@ -15,7 +15,11 @@ export default function LoginView() {
         email,
         password,
       });
+      
       console.log("Login successful:", response.data);
+      
+      localStorage.setItem("access_token", response.data.access_token);
+
       setRedirect(true); // Set redirect state to true
     } catch (error) {
       console.error("Error logging in:", error);
